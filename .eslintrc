@@ -1,0 +1,22 @@
+{
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "parser": "babel-eslint",
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "semi": 0,
+    "comma-dangle": 0,
+    "max-len": [1, 120, 2, {ignoreComments: true}],
+    "react/prop-types": [2, {ignore: ["dispatch"]}],
+  },
+  "extends": ["airbnb-base"],
+   "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    }
+}
