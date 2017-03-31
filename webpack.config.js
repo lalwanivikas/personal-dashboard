@@ -1,4 +1,5 @@
 const path = require('path')
+const DashboardPlugin = require('webpack-dashboard/plugin')
 
 const config = {
   entry: './src/index.js',
@@ -17,7 +18,10 @@ const config = {
   },
   devServer: {
     contentBase: 'public'
-  }
+  },
+  plugins: [
+    new DashboardPlugin()
+  ]
 }
 
 module.exports = config
