@@ -1,18 +1,18 @@
 const express = require('express')
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser')
 
 const db = require('./queries')
 
 const app = express()
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 
-app.get('/api/puppies', db.getAllPuppies)
-app.get('/api/puppies/:id', db.getSinglePuppy)
-app.post('/api/puppies', db.createPuppy)
-app.put('/api/puppies/:id', db.updatePuppy)
-app.delete('/api/puppies/:id', db.removePuppy)
+app.get('/api/items/', db.getAllData)
+app.get('/api/items/:category', db.getItemsList)
+app.post('/api/items/', db.createItem)
+app.put('/api/items/:id', db.updateItem)
+app.delete('/api/items/:id', db.removeItem)
 
 // development error handler
 // will print stacktrace
@@ -22,8 +22,8 @@ if (app.get('env') === 'development') {
     .json({
       status: 'error',
       message: err
-    });
-  });
+    })
+  })
 }
 
 // production error handler
@@ -33,7 +33,7 @@ app.use(function(err, req, res, next) {
   .json({
     status: 'error',
     message: err.message
-  });
-});
+  })
+})
 
-app.listen(3000, () => console.log("listening on port 3000!"));
+app.listen(3000, () => console.log("listening on port 3000!"))

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index"
+    "start": "nodemon app"
   },
   "keywords": [],
   "author": "",
@@ -12,8 +12,8 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
-    "morgan": "^1.8.1",
-    "pg-promise": "^5.6.4"
+    "pg-promise": "^5.6.4",
+    "shortid": "^2.2.8"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
