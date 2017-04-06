@@ -8,11 +8,12 @@ const db = pgp(connectionString)
 table columns: id, category, todo_text, todo_status, created_at, updated_at
 POST AND PUT request format:
 {
-  "category": "misc",
-  "todo_text": "get another shit done",
+  "category": "goal",
+  "todo_text": "fly to mars",
   "todo_status": "FALSE",
   "created_at": "now()",
-  "updated_at": null
+  "updated_at": null,
+  "target_date": "2017-10-10 04:05:06"
 }
 */
 
@@ -45,8 +46,8 @@ const getItemsList = (req, res, next) => {
 
 const createItem = (req, res, next) => {
   req.body.id = shortid.generate()
-  db.none('insert into items(id, category, todo_text, todo_status, created_at, updated_at)' +
-      'values(${id}, ${category}, ${todo_text}, ${todo_status}, ${created_at}, ${updated_at})', req.body)
+  db.none('insert into items(id, category, todo_text, todo_status, created_at, updated_at, target_date)' +
+      'values(${id}, ${category}, ${todo_text}, ${todo_status}, ${created_at}, ${updated_at}, ${target_date})', req.body)
     .then(() => {
       res.status(200)
         .json({
@@ -59,9 +60,9 @@ const createItem = (req, res, next) => {
 
 const updateItem = (req, res, next) => {
   const id = req.params.id
-  const { category, todo_text, todo_status, created_at, updated_at } = req.body
-  db.none('update items set category=$1, todo_text=$2, todo_status=$3, created_at=$4, updated_at=$5 where id=$6',
-    [category, todo_text, todo_status, created_at, updated_at, id])
+  const { category, todo_text, todo_status, created_at, updated_at, target_date } = req.body
+  db.none('update items set category=$1, todo_text=$2, todo_status=$3, created_at=$4, updated_at=$5, target_date=$6 where id=$7',
+    [category, todo_text, todo_status, created_at, updated_at, target_date, id])
     .then(() => {
       res.status(200)
         .json({

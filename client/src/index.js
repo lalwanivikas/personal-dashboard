@@ -1,10 +1,22 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
+import configureStore from './store/configureStore'
+import App from './components/App'
 
-const Hello = ({ name }) => <h1>How are you {name}?</h1>
-
-Hello.propTypes = {
-  name: React.PropTypes.string
+const initialState = {
+  todosByView: {
+    isFetching: false,
+    items: []
+  },
+  activeView: ''
 }
 
-ReactDOM.render(<Hello name='Vikas' />, document.getElementById('root'))
+const store = configureStore(initialState)
+
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)

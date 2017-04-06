@@ -9,7 +9,8 @@ CREATE TABLE items (
   todo_text VARCHAR NOT NULL,
   todo_status BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP
+  updated_at TIMESTAMP,
+  target_date TIMESTAMP
 );
 
 /*
