@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom'
 import { Layout, Header, Navigation, Drawer, Content } from 'react-mdl'
 
 const LeftNav = ({ children }) => (
-  <Layout fixedHeader fixedDrawer>
+  <Layout fixedHeader>
 
     <Header title="R">
       <Navigation>
-        <Link to='/'>Add goals</Link>
+        <Link to='/goals'>Add goals</Link>
         <Link to='/'>Sign out</Link>
       </Navigation>
     </Header>
@@ -15,8 +15,8 @@ const LeftNav = ({ children }) => (
     <Drawer title="R">
       <Navigation>
         <Link to='/'>Dashboard</Link>
-        <Link to='/work'>Work</Link>
-        <Link to='/misc'>Misc</Link>
+        <Link to='/list/work'>Work</Link>
+        <Link to='/list/misc'>Misc</Link>
       </Navigation>
     </Drawer>
 

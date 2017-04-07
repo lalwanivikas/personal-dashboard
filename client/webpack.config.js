@@ -17,7 +17,9 @@ const config = {
     }]
   },
   devServer: {
-    contentBase: 'public'
+    publicPath: "/dist/",
+    contentBase: "public",
+    historyApiFallback: true
   },
   plugins: [
     new DashboardPlugin()
