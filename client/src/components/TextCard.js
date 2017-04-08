@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Card, CardTitle, CardText, CardMenu, IconButton, Menu, MenuItem } from 'react-mdl'
 import { Link } from 'react-router-dom'
 
@@ -28,9 +29,9 @@ const TextCard = ({ bgColor, cardTitle, cardText, buttonText }) => (
 )
 
 TextCard.propTypes = {
-  bgColor: PropTypes.string.isRequired,
-  cardTitle: PropTypes.string.isRequired,
-  cardText: PropTypes.string.isRequired,
+  bgColor   : PropTypes.string.isRequired,
+  cardTitle : PropTypes.string.isRequired,
+  cardText  : PropTypes.string.isRequired,
   buttonText: PropTypes.string.isRequired
 }
 
