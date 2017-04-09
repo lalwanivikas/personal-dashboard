@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { REQUEST_TODOS, RECEIVE_TODOS, SET_VIEW } from '../actions'
+import { REQUEST_TODOS, RECEIVE_TODOS, SET_VIEW, CREATE_TODO, EDIT_TODO, DELETE_TODO } from '../actions'
 
 function activeView(state = '', action) {
   switch (action.type) {
@@ -23,6 +23,18 @@ function todosByView(state = {
       return Object.assign({}, state, {
         isFetching: false,
         items: action.todos
+      })
+    case CREATE_TODO:
+      return Object.assign({}, state, {
+        isFetching: true
+      })
+    case EDIT_TODO:
+      return Object.assign({}, state, {
+        isFetching: true
+      })
+    case DELETE_TODO:
+      return Object.assign({}, state, {
+        isFetching: true
       })
     default:
       return state

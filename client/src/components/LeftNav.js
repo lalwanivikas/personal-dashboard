@@ -13,7 +13,7 @@ const LeftNav = ({ children }) => (
       </Navigation>
     </Header>
 
-    <Drawer title="R">
+    <Drawer title="Vikas Lalwani">
       <Navigation>
         <Link to='/'>Dashboard</Link>
         <Link to='/list/work'>Work</Link>

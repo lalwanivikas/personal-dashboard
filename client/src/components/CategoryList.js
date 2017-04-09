@@ -8,7 +8,23 @@ export class CategoryList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      items: []
+      items: [],
+      newTodo: ''
+    }
+  }
+
+  handleKeyPress(e) {
+    if (e.key === 'Enter') {
+      console.log('do validate');
+      this.props.createTodo({
+        "category": this.props.category,
+        "todo_text": this.state.newTodo,
+        "todo_status": "FALSE",
+        "created_at": "now()",
+        "updated_at": null,
+        "target_date": null
+      })
+      this.setState({ newTodo: '' })
     }
   }
 
@@ -16,12 +32,12 @@ export class CategoryList extends Component {
     this.props.fetchTodos(this.props.category)
   }
 
-  componentWillReceiveProps(newProps) {
-    if(newProps.category !== this.props.category) {
-      this.props.fetchTodos(newProps.category)
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.category !== this.props.category) {
+      this.props.fetchTodos(nextProps.category)
     }
     this.setState({
-      items: newProps.todosByView.items
+      items: nextProps.todosByView.items
     })
   }
 
@@ -33,7 +49,9 @@ export class CategoryList extends Component {
         <Cell col={2}></Cell>
         <Cell col={8}>
           <Textfield
-            onChange={() => {}}
+            onKeyUp={(e) => this.handleKeyPress(e)}
+            onChange={(e) => this.setState({ newTodo: e.target.value})}
+            value={this.state.newTodo}
             label="Add new item here"
             floatingLabel
             style={{width: '100%'}}
@@ -42,7 +60,11 @@ export class CategoryList extends Component {
             incompleteTasks.length
             ? <div>
                 <h4>Incomplete tasks</h4>
-                <ToDoItems items={incompleteTasks} />
+                <ToDoItems
+                  items={incompleteTasks}
+                  editTodo={(id, todo) => this.props.editTodo(id, todo)}
+                  deleteTodo={(id, category) => this.props.deleteTodo(id, category)}
+                />
               </div>
             : ''
           }
@@ -50,7 +72,11 @@ export class CategoryList extends Component {
             completedTasks.length
             ? <div>
                 <h4>Completed tasks</h4>
-                <ToDoItems items={completedTasks} />
+                <ToDoItems
+                  items={completedTasks}
+                  editTodo={(id, todo) => this.props.editTodo(id, todo)}
+                  deleteTodo={(id, category) => this.props.deleteTodo(id, category)}
+                />
               </div>
             : ''
           }
@@ -67,20 +93,10 @@ CategoryList.propTypes = {
   activeView  : PropTypes.string.isRequired,
   todosByView : PropTypes.object.isRequired,
   setView     : PropTypes.func.isRequired,
-  fetchTodos  : PropTypes.func.isRequired
+  fetchTodos  : PropTypes.func.isRequired,
+  createTodo  : PropTypes.func.isRequired,
+  editTodo    : PropTypes.func.isRequired,
+  deleteTodo  : PropTypes.func.isRequired
 }
 
 export default CategoryList
-
-// <DataTable
-//   selectable
-//   shadow={0}
-//   rowKeyColumn="id"
-//   rows={
-//     this.state.items.map(todo => {
-//       return {id: todo.id, todo: todo.todo_text }
-//     })
-//   }
-// >
-//   <TableHeader name="todo" tooltip="Get these items done!" style={{ width: '100%' }}>To Do</TableHeader>
-// </DataTable>

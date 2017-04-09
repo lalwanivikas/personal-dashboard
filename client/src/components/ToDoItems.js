@@ -8,8 +8,15 @@ class ToDoItems extends Component {
     super(props)
     this.state = {
       showEditModal: false,
-      itemBeingEdited: {}
+      itemBeingEdited: {},
+      editedText: ''
     }
+  }
+
+  submitEditedItem(id, newItem) {
+    const editedItem = Object.assign({}, newItem)
+    delete editedItem.id
+    this.props.editTodo(id, editedItem)
   }
 
   render() {
@@ -17,27 +24,30 @@ class ToDoItems extends Component {
       <div>
         <table
           className="mdl-data-table mdl-js-data-table"
-          style={{boxShadow: '0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12)'}}
+          style={{ marginBottom: '4rem', boxShadow: '0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12)' }}
         >
-          <thead>
-            <tr>
-              <th></th>
-              <th className="mdl-data-table__cell--non-numeric" style={{ width: '100%'}}>To Do</th>
-              <th className="mdl-data-table__cell--non-numeric">Edit/Delete</th>
-            </tr>
-          </thead>
           <tbody>
             {
               this.props.items.map(item => (
                 <tr key={item.id}>
-                  <td><Checkbox label="" onClick={() => console.log(`Edit item ${item.id}`)} /></td>
-                  <td className="mdl-data-table__cell--non-numeric">{item.todo_text}</td>
+                  <td>
+                    <Checkbox label="" onClick={() => {
+                      this.submitEditedItem(item.id, Object.assign({}, item, {todo_status: !item.todo_status}))
+                    }}/>
+                  </td>
+                  <td className="mdl-data-table__cell--non-numeric" style={{ width: '100%', whiteSpace: 'normal'}}>{item.todo_text}</td>
                   <td>
                     <div style={{position: 'relative'}}>
                       <IconButton name="more_vert" id={item.id} />
                       <Menu target={item.id} align="right">
-                        <MenuItem onClick={() => this.setState({ showEditModal: true, itemBeingEdited: item })}>Edit</MenuItem>
-                        <MenuItem onClick={() => console.log(`Delete item ${item.id}`)}>Delete</MenuItem>
+                        <MenuItem
+                          onClick={() => this.setState({
+                            showEditModal: true,
+                            itemBeingEdited: item,
+                            editedText: item.todo_text
+                          })}>Edit
+                        </MenuItem>
+                        <MenuItem onClick={() => this.props.deleteTodo(item.id, item.category)}>Delete</MenuItem>
                       </Menu>
                     </div>
                   </td>
@@ -52,15 +62,22 @@ class ToDoItems extends Component {
                 <DialogTitle>Edit To Do</DialogTitle>
                 <DialogContent>
                   <Textfield
-                    onChange={() => {}}
+                    onChange={(e) => this.setState({ editedText: e.target.value })}
+                    value={this.state.editedText}
                     label='To Do'
-                    value={this.state.itemBeingEdited.todo_text}
                     style={{width: '100%'}}
                   />
                 </DialogContent>
                 <DialogActions>
-                  <Button type='button'>Done</Button>
-                  <Button type='button' onClick={() => this.setState({ showEditModal: !this.state.showEditModal })}>Cancel</Button>
+                  <Button
+                    type='button'
+                    onClick={() => {
+                      const itemBeingEdited = this.state.itemBeingEdited
+                      this.submitEditedItem(itemBeingEdited.id, Object.assign({}, itemBeingEdited, {todo_text: this.state.editedText}))
+                      this.setState({ showEditModal: false })
+                    }}>Done
+                  </Button>
+                  <Button type='button' onClick={() => this.setState({ showEditModal: false })}>Cancel</Button>
                 </DialogActions>
               </Dialog>
             : ''
@@ -72,18 +89,9 @@ class ToDoItems extends Component {
 }
 
 ToDoItems.propTypes = {
-  items: PropTypes.array.isRequired
+  items       : PropTypes.array.isRequired,
+  editTodo    : PropTypes.func.isRequired,
+  deleteTodo  : PropTypes.func.isRequired
 }
 
 export default ToDoItems
-
-// <button id={item.id} className="mdl-button mdl-js-button mdl-button--icon">
-//   <i className="material-icons">more_vert</i>
-// </button>
-// <ul
-//   className="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-//   htmlFor={item.id}
-// >
-//   <li className="mdl-menu__item" onClick={() => this.setState({ showEditModal: true, itemBeingEdited: item })}>Edit</li>
-//   <li className="mdl-menu__item" onClick={() => console.log(`Delete item ${item.id}`)}>Delete</li>
-// </ul>
