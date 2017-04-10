@@ -31,9 +31,13 @@ class ToDoItems extends Component {
               this.props.items.map(item => (
                 <tr key={item.id}>
                   <td>
-                    <Checkbox label="" onClick={() => {
-                      this.submitEditedItem(item.id, Object.assign({}, item, {todo_status: !item.todo_status}))
-                    }}/>
+                    <Checkbox
+                      label=""
+                      defaultChecked={this.props.completed}
+                      onChange={() => {
+                        this.submitEditedItem(item.id, Object.assign({}, item, {todo_status: !item.todo_status}))
+                      }}
+                    />
                   </td>
                   <td className="mdl-data-table__cell--non-numeric" style={{ width: '100%', whiteSpace: 'normal'}}>{item.todo_text}</td>
                   <td>
@@ -89,6 +93,7 @@ class ToDoItems extends Component {
 }
 
 ToDoItems.propTypes = {
+  completed   : PropTypes.bool.isRequired,
   items       : PropTypes.array.isRequired,
   editTodo    : PropTypes.func.isRequired,
   deleteTodo  : PropTypes.func.isRequired

@@ -61,6 +61,7 @@ export class CategoryList extends Component {
             ? <div>
                 <h4>Incomplete tasks</h4>
                 <ToDoItems
+                  completed={false}
                   items={incompleteTasks}
                   editTodo={(id, todo) => this.props.editTodo(id, todo)}
                   deleteTodo={(id, category) => this.props.deleteTodo(id, category)}
@@ -73,6 +74,7 @@ export class CategoryList extends Component {
             ? <div>
                 <h4>Completed tasks</h4>
                 <ToDoItems
+                  completed={true}
                   items={completedTasks}
                   editTodo={(id, todo) => this.props.editTodo(id, todo)}
                   deleteTodo={(id, category) => this.props.deleteTodo(id, category)}

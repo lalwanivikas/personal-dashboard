@@ -48,7 +48,7 @@ class Dashboard extends Component {
                   <TextCard
                     bgColor={bgColors[keys[index % Object.keys(bgColors).length]]}
                     cardTitle={stat.title}
-                    cardText={stat.text}
+                    cardText={stat.text.toUpperCase()}
                     buttonText={stat.type === 'goal' ? 'Update goal': ''}
                   />
                 </Cell>

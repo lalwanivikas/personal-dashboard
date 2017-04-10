@@ -1,15 +1,36 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Cell, Textfield } from 'react-mdl'
+import { Grid, Cell } from 'react-mdl'
+import GoalForm from './GoalForm'
 
 export class Goals extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      items: [],
-      newTodo: ''
+      items: []
     }
+  }
+
+  createNewGoal(goalText, targetDate) {
+    this.props.createTodo({
+      "category": 'goal',
+      "todo_text": goalText,
+      "todo_status": "FALSE",
+      "created_at": "now()",
+      "updated_at": null,
+      "target_date": targetDate
+    })
+  }
+
+  submitEditedItem(id, newItem) {
+    const editedItem = Object.assign({}, newItem)
+    delete editedItem.id
+    this.props.editTodo(id, editedItem)
+  }
+
+  setNewTargetDay() {
+
   }
 
   componentDidMount() {
@@ -25,25 +46,27 @@ export class Goals extends Component {
       <Grid>
         <Cell col={2}></Cell>
         <Cell col={8}>
-          <Textfield
-            onKeyUp={(e) => this.handleKeyPress(e)}
-            onChange={(e) => this.setState({ newTodo: e.target.value})}
-            value={this.state.newTodo}
-            label="Add new item here"
-            floatingLabel
-            style={{width: '100%'}}
+          <GoalForm
+            label='Add new goal here'
+            goalText=''
+            onFormSubmit={(goalText, targetDate) => this.createNewGoal(goalText, targetDate)}
+            newTargetDay={() => this.setNewTargetDay()}
           />
-          {
-            this.props.todosByView.items.map(item => {
-              return (
-                <div key={item.id}>
-                  <span key={item.id}>{item.todo_text}</span>
-                  <input type='date' />
-                </div>
-              )
-            })
-          }
-
+          <div style={{ padding: '.5rem 0' }}>
+            <h4 style={{ padding: '1rem 0 0 1rem', marginBottom: 0 }}>Existing goals</h4>
+            {
+              this.state.items.map(item => (
+                <GoalForm
+                  key={item.id}
+                  label=''
+                  goalText={item.todo_text}
+                  onFormSubmit={(id, newItem) => this.submitEditedItem(id, newItem)}
+                  currentTargetDay={new Date(item.target_date)}
+                  newTargetDay={() => this.setNewTargetDay()}
+                />
+              ))
+            }
+          </div>
         </Cell>
         <Cell col={2}></Cell>
       </Grid>
