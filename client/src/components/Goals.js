@@ -23,14 +23,17 @@ export class Goals extends Component {
     })
   }
 
-  submitEditedItem(id, newItem) {
-    const editedItem = Object.assign({}, newItem)
+  editExistingGoal(goalText, targetDate, id) {
+    const itemBeingEdited = this.state.items.filter(item => item.id === id)[0]
+    const editedItem = Object.assign(itemBeingEdited, {todo_text: goalText, target_date: targetDate})
     delete editedItem.id
     this.props.editTodo(id, editedItem)
   }
 
-  setNewTargetDay() {
-
+  deleteGoal(id) {
+    // Second parameter of deleteTodo is category.
+    // To be able to fetch the results of same category again
+    this.props.deleteTodo(id, 'goal')
   }
 
   componentDidMount() {
@@ -47,10 +50,11 @@ export class Goals extends Component {
         <Cell col={2}></Cell>
         <Cell col={8}>
           <GoalForm
+            type='new'
             label='Add new goal here'
             goalText=''
             onFormSubmit={(goalText, targetDate) => this.createNewGoal(goalText, targetDate)}
-            newTargetDay={() => this.setNewTargetDay()}
+            currentTargetDay={new Date()}
           />
           <div style={{ padding: '.5rem 0' }}>
             <h4 style={{ padding: '1rem 0 0 1rem', marginBottom: 0 }}>Existing goals</h4>
@@ -58,11 +62,13 @@ export class Goals extends Component {
               this.state.items.map(item => (
                 <GoalForm
                   key={item.id}
+                  type='existing'
                   label=''
                   goalText={item.todo_text}
-                  onFormSubmit={(id, newItem) => this.submitEditedItem(id, newItem)}
+                  id={item.id}
                   currentTargetDay={new Date(item.target_date)}
-                  newTargetDay={() => this.setNewTargetDay()}
+                  onFormSubmit={(goalText, targetDate, id) => this.editExistingGoal(goalText, targetDate, id)}
+                  deleteGoal={id => this.deleteGoal(id)}
                 />
               ))
             }

@@ -30,19 +30,18 @@ export function calculateStats(todosArray) {
       }
     })
 
-  let latestUpdatedItem = todosArray.filter(todo => todo.updated_at !== null)
-
-  if (latestUpdatedItem.updated_at === null || latestUpdatedItem.length === 0) {
+  let latestUpdatedItems = todosArray.filter(todo => todo.updated_at !== null)
+  if (latestUpdatedItems.length === 0) {
     statsArray.push({
       title: '∞ days',
       text: 'since last activity',
       type: 'stat'
     })
   } else {
-    latestUpdatedItem = latestUpdatedItem.reduce((prev, curr) => Date.parse(prev.updated_at) - Date.parse(curr.updated_at))
+    const latestUpdatedItem = latestUpdatedItems.sort((prev, curr) => Date.parse(curr.updated_at) - Date.parse(prev.updated_at))[0]
     const dayDiff = dateDiffInDays(new Date(latestUpdatedItem.updated_at), new Date())
     statsArray.push({
-      title: dayDiff > 1 ? `${dayDiff} days` : `${dayDiff} day`,
+      title: dayDiff > 1 ||  dayDiff === 0 ? `${dayDiff} days` : `${dayDiff} day`,
       text: 'since last activity',
       type: 'stat'
     })

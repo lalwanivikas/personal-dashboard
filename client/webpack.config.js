@@ -3,11 +3,11 @@ const DashboardPlugin = require('webpack-dashboard/plugin')
 
 const config = {
   entry: './src/index.js',
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/dist/',
-  },
+  // output: {
+  //   path: path.resolve(__dirname, 'dist'),
+  //   filename: 'bundle.js',
+  //   publicPath: '/dist/',
+  // },
   module: {
     rules: [{
       test: /\.js$/,

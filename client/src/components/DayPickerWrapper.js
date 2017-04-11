@@ -17,15 +17,15 @@ class DayPickerWrapper extends Component {
 
   constructor(props) {
     super(props)
-    this.input = null
-    this.daypicker = null
-    this.clickedInside = false
-    this.clickTimeout = null
     this.state = {
       showOverlay: false,
       value: '',
       selectedDay: props.currentTargetDay,
     }
+    this.input = null
+    this.daypicker = null
+    this.clickedInside = false
+    this.clickTimeout = null
     this.handleDayClick = this.handleDayClick.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleInputFocus = this.handleInputFocus.bind(this)
@@ -38,63 +38,57 @@ class DayPickerWrapper extends Component {
   }
 
   handleContainerMouseDown() {
-    this.clickedInside = true
-    // The input's onBlur method is called from a queue right after onMouseDown event.
-    // setTimeout adds another callback in the queue, but is called later than onBlur event
-    this.clickTimeout = setTimeout(() => {
-      this.clickedInside = false
-    }, 0)
-  }
-
-  handleInputFocus() {
-    this.setState({
-      showOverlay: true,
-    })
-  }
-
-  handleInputBlur() {
-    const showOverlay = this.clickedInside
-
-    this.setState({
-      showOverlay,
-    })
-
-    // Force input's focus if blur event was caused by clicking on the calendar
-    if (showOverlay) {
-      this.input.focus()
+      this.clickedInside = true
+      // The input's onBlur method is called from a queue right after onMouseDown event.
+      // setTimeout adds another callback in the queue, but is called later than onBlur event
+      this.clickTimeout = setTimeout(() => {
+        this.clickedInside = false
+      }, 0)
     }
-  }
 
-  handleInputChange(e) {
-    const { value } = e.target
-    const momentDay = moment(value, 'L', true)
-    if (momentDay.isValid()) {
+    handleInputFocus() {
       this.setState({
-        selectedDay: momentDay.toDate(),
-        value,
-      }, () => {
-        this.daypicker.showMonth(this.state.selectedDay)
+        showOverlay: true,
       })
-    } else {
-      this.setState({ value, selectedDay: null })
     }
-  }
+
+    handleInputBlur() {
+      const showOverlay = this.clickedInside
+      this.setState({
+        showOverlay,
+      })
+    }
+
+    handleInputChange(e) {
+      const { value } = e.target
+      const momentDay = moment(value, 'L', true)
+      if (momentDay.isValid()) {
+        this.setState({
+          selectedDay: momentDay.toDate(),
+          value,
+        }, () => {
+          this.daypicker.showMonth(this.state.selectedDay)
+        })
+      } else {
+        this.setState({ value, selectedDay: null })
+      }
+    }
 
 
-  handleDayClick(day) {
-    this.setState({
-      value: moment(day).format('L'),
-      selectedDay: day,
-      showOverlay: false,
-    })
-    this.input.blur()
-  }
+    handleDayClick(day) {
+      this.setState({
+        value: moment(day).format('L'),
+        selectedDay: day,
+        showOverlay: false,
+      })
+      this.input.inputRef.blur()
+      this.props.setNewDay(day)
+    }
 
   render() {
     return (
-      <div onMouseDown={ this.handleContainerMouseDown }>
+      <div onMouseDown={ this.handleContainerMouseDown}>
         <Textfield
-          type="text"
           label='target date'
           ref={ (el) => { this.input = el } }
           placeholder={ moment(this.props.currentTargetDay).format("MMM Do YY") || `DD/MM/YYYY`}
@@ -104,7 +98,7 @@ class DayPickerWrapper extends Component {
           onBlur={ this.handleInputBlur }
         />
         { this.state.showOverlay &&
-          <div style={ { position: 'relative' } }>
+          <div style={{ position: 'relative' }}>
             <div style={ overlayStyle }>
               <DayPicker
                 ref={ (el) => { this.daypicker = el } }
@@ -120,8 +114,10 @@ class DayPickerWrapper extends Component {
     )
   }
 }
+
 DayPickerWrapper.propTypes = {
-  currentTargetDay: PropTypes.object
+  currentTargetDay  : PropTypes.object,
+  setNewDay         : PropTypes.func.isRequired,
 }
 
 

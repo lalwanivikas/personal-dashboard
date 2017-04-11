@@ -37,12 +37,12 @@ class Dashboard extends Component {
 
   render() {
     const shuffledArray = shuffleArray(this.state.stats)
+    const keys = shuffleArray(Object.keys(bgColors))
     return (
       <div>
         <Grid>
           {
             shuffledArray.map((stat, index) => {
-              const keys = Object.keys(bgColors)
               return (
                 <Cell col={4} key={index}>
                   <TextCard

@@ -46,7 +46,6 @@ const getItemsList = (req, res, next) => {
 
 const createItem = (req, res, next) => {
   req.body.id = shortid.generate()
-  console.log(req.body)
   db.none('insert into items(id, category, todo_text, todo_status, created_at, updated_at, target_date)' +
       'values(${id}, ${category}, ${todo_text}, ${todo_status}, ${created_at}, ${updated_at}, to_timestamp(${target_date}))', req.body)
     .then(() => {
@@ -61,9 +60,9 @@ const createItem = (req, res, next) => {
 
 const updateItem = (req, res, next) => {
   const id = req.params.id
-  const { category, todo_text, todo_status, created_at, target_date } = req.body
-  db.none('update items set category=$1, todo_text=$2, todo_status=$3, created_at=$4, updated_at=now(), target_date=$5 where id=$6',
-    [category, todo_text, todo_status, created_at, target_date, id])
+  const { category, todo_text, todo_status, target_date } = req.body
+  db.none('update items set category=$1, todo_text=$2, todo_status=$3, updated_at=now(), target_date=to_timestamp($4) where id=$5',
+    [category, todo_text, todo_status, target_date, id])
     .then(() => {
       res.status(200)
         .json({
