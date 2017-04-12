@@ -1,11 +1,25 @@
+require('dotenv').config()
 const express = require('express')
+const app = express()
+const jwt = require('express-jwt')
+const jwksRsa = require('jwks-rsa')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-
 const db = require('./queries')
 
-const app = express()
+const jwtCheck = jwt({
+  secret: jwks.expressJwtSecret({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 5,
+      jwksUri: "https://lalwanivikas.auth0.com/.well-known/jwks.json"
+  }),
+  audience: 'ToDoList API',
+  issuer: "https://lalwanivikas.auth0.com/",
+  algorithms: ['RS256']
+})
 
+app.use(jwtCheck)
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -17,17 +31,6 @@ app.post('/api/items/', db.createItem)
 app.put('/api/items/:id', db.updateItem)
 app.delete('/api/items/:id', db.removeItem)
 
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status( err.code || 500 )
-    .json({
-      status: 'error',
-      message: err
-    })
-  })
-}
 
 // production error handler
 // no stacktraces leaked to user

@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start"   : "nodemon app",
-    "cleandb" : "psql -f todos.sql"
+    "start": "nodemon app",
+    "cleandb": "psql -f todos.sql"
   },
   "keywords": [],
   "author": "",
@@ -13,7 +13,10 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "cors": "^2.8.3",
+    "dotenv": "^4.0.0",
     "express": "^4.15.2",
+    "express-jwt": "^5.1.0",
+    "jwks-rsa": "^1.1.1",
     "pg-promise": "^5.6.4",
     "shortid": "^2.2.8"
   },
