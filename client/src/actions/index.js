@@ -32,7 +32,7 @@ function receiveTodos(view, json) {
 export function fetchTodos(view) {
   return dispatch => {
     dispatch(requestTodos(view))
-    return fetch(`http://localhost:3000/api/items/${view}`)
+    return fetch(`API_ENDPOINT/api/items/${view}`)
       .then(response => response.json())
       .then(json => dispatch(receiveTodos(view, json)))
   }
@@ -40,7 +40,7 @@ export function fetchTodos(view) {
 
 export function createTodo(todo) {
   return dispatch => {
-    return fetch(`http://localhost:3000/api/items/`, {
+    return fetch(`API_ENDPOINT/api/items/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -53,7 +53,7 @@ export function createTodo(todo) {
 
 export function editTodo(id, todo) {
   return dispatch => {
-    return fetch(`http://localhost:3000/api/items/${id}`, {
+    return fetch(`API_ENDPOINT/api/items/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -66,7 +66,7 @@ export function editTodo(id, todo) {
 
 export function deleteTodo(id, category) {
   return dispatch => {
-    return fetch(`http://localhost:3000/api/items/${id}`, {
+    return fetch(`API_ENDPOINT/api/items/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'

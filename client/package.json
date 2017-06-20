@@ -1,10 +1,11 @@
 {
-  "name": "r",
+  "name": "dashboard",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dashboard webpack-dev-server"
+    "build": "webpack",
+    "dev": "webpack-dashboard webpack-dev-server"
   },
   "keywords": [],
   "author": "",
@@ -21,15 +22,14 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
+    "string-replace-loader": "^1.2.0",
     "style-loader": "^0.16.1",
     "webpack": "^2.3.2",
     "webpack-dashboard": "^0.3.0",
     "webpack-dev-server": "^2.4.2"
   },
   "dependencies": {
-    "auth0-lock": "^10.14.0",
     "history": "^4.6.1",
-    "jwt-decode": "^2.2.0",
     "moment": "^2.18.1",
     "prop-types": "^15.5.4",
     "react": "^15.5.3",

@@ -1,38 +1,64 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
+import Login from '../components/Login'
 import LeftNav from '../components/LeftNav'
 import Dashboard from '../containers/Dashboard'
 import CategoryList from '../containers/CategoryList'
 import Goals from '../containers/Goals'
-import Login from '../components/Login'
 
-import AuthService from '../AuthService'
+import { capitalizeFirstCharacter } from './../helpers'
 
-const auth = new AuthService('2ffF9VsUB3O7EKOEQKOvsSGje93Hiiyo', 'lalwanivikas.auth0.com')
+export class App extends Component {
+  render() {
+    return (
+      <Router>
+        <div>
 
-// validate authentication for private routes
-// const requireAuth = (nextState, replace) => {
-//   if (!auth.loggedIn()) {
-//     replace({ pathname: '/login' })
-//   }
-// }
+          <Route exact path='/' component={() => (
+              <LeftNav title='Dashboard'>
+                <Dashboard />
+              </LeftNav>
+            )}
+          />
 
-const App = () => (
-  <Router>
-    <LeftNav>
-      <Route exact path='/' component={Dashboard} auth={auth} />
-      <Route path='/goals'component={Goals} />
-      <Route
-        path='/list/:category'
-        component={({ match }) => <CategoryList category={match.params.category} />}
-      />
-      <Route
-        path='/login'
-        component={() => <Login auth={auth} />}
-      />
-    </LeftNav>
-  </Router>
-)
+          <Route path='/goals' component={() => (
+              <LeftNav title='Add or update goals'>
+                <Goals />
+              </LeftNav>
+            )}
+          />
+
+          <Route path='/list/:category' component={({ match }) => (
+              <LeftNav title={capitalizeFirstCharacter(match.params.category)}>
+                <CategoryList category={match.params.category} />
+              </LeftNav>
+            )}
+          />
+
+          <Route exact path='/login' component={Login} />
+
+        </div>
+      </Router>
+    )
+  }
+}
 
 export default App
+
+// export class App extends Component {
+//   render() {
+//     return (
+//       <Router>
+//         <LeftNav>
+//           <Route exact path='/' component={Dashboard} />
+//           <Route path='/goals'component={Goals} />
+//           <Route
+//             path='/list/:category'
+//             component={({ match }) => <CategoryList category={match.params.category} />}
+//           />
+//         </LeftNav>
+//       </Router>
+//     )
+//   }
+// }

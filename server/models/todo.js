@@ -1,7 +1,7 @@
 const pgp = require('pg-promise')()
 const shortid = require('shortid')
 
-const connectionString = 'postgres://localhost:5432/todos'
+const connectionString = `${process.env.DB_ENDPOINT}/todos`
 const db = pgp(connectionString)
 
 /*

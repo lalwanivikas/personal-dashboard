@@ -17,3 +17,20 @@ CREATE TABLE items (
 INSERT INTO items (id, category, todo_text, todo_status, created_at)
   VALUES ('41XTDbE', 'misc', 'get shit done', 'FALSE', CURRENT_TIMESTAMP);
 */
+
+/*
+- Add user_id
+
+users:
+- user id
+- name
+- email
+- password hash
+- salt
+
+access_tokens
+- user_id
+- token
+- valid_till
+
+*/

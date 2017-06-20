@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { Layout, Header, Navigation, Drawer, Content } from 'react-mdl'
 
-const LeftNav = ({ children }) => (
+const LeftNav = ({ children, title }) => (
   <Layout fixedHeader>
 
-    <Header title="R">
+    <Header title={title}>
       <Navigation>
         <Link to='/goals'>Add goals</Link>
         <Link to='/'>Sign out</Link>
@@ -29,7 +29,8 @@ const LeftNav = ({ children }) => (
 )
 
 LeftNav.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  title: PropTypes.string.isRequired
 }
 
 export default LeftNav
