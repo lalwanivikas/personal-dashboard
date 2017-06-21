@@ -1,7 +1,9 @@
 const express = require('express')
 const validator = require('validator')
+const passport = require('passport')
 
 const router = new express.Router()
+const user = require('./../models/user')
 
 /**
  * Validate the sign up form
@@ -14,8 +16,6 @@ function validateSignupForm(payload) {
   const errors = {}
   let isFormValid = true
   let message = ''
-
-  console.log(payload)
 
   if (!payload || typeof payload.name !== 'string' || payload.name.trim().length === 0) {
     isFormValid = false
@@ -36,8 +36,6 @@ function validateSignupForm(payload) {
   if (!isFormValid) {
     message = 'Check the form for errors.'
   }
-
-  console.log(errors);
 
   return {
     success: isFormValid,
@@ -79,7 +77,7 @@ function validateLoginForm(payload) {
   }
 }
 
-router.post('/signup', (req, res) => {
+router.post('/signup', (req, res, next) => {
   const validationResult = validateSignupForm(req.body)
   if (!validationResult.success) {
     return res.status(400).json({
@@ -88,11 +86,17 @@ router.post('/signup', (req, res) => {
       errors: validationResult.errors
     })
   }
-
-  return res.status(200).end(JSON.stringify({"success": "true"}))
+  user.createUser(req.body)
+    .then(() => {
+      res.status(200).json({
+        success: true,
+        message: 'You have successfully signed up! Now you should be able to log in.'
+      })
+    })
+    .catch(next)
 })
 
-router.post('/login', (req, res) => {
+router.post('/login', (req, res, next) => {
   const validationResult = validateLoginForm(req.body)
   if (!validationResult.success) {
     return res.status(400).json({
@@ -102,8 +106,22 @@ router.post('/login', (req, res) => {
     })
   }
 
-  return res.status(200).end()
+  return passport.authenticate('local-login', (err, token, userData) => {
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        message: 'Could not login at this moment.'
+      })
+    }
+    return res.status(200).json({
+      success: true,
+      message: 'You have successfully logged in!',
+      token,
+      user: userData
+    })
+  })(req, res, next)
 })
-
+// (req, req.body.email, req.body.password, next)
+// (req, res, next)
 
 module.exports = router

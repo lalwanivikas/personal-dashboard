@@ -29,21 +29,21 @@ class ToDoItems extends Component {
           <tbody>
             {
               this.props.items.map(item => (
-                <tr key={item.id}>
+                <tr key={item.todo_id}>
                   <td>
                     <Checkbox
                       label=""
                       defaultChecked={this.props.completed}
                       onChange={() => {
-                        this.submitEditedItem(item.id, Object.assign({}, item, {todo_status: !item.todo_status}))
+                        this.submitEditedItem(item.todo_id, Object.assign({}, item, {todo_status: !item.todo_status}))
                       }}
                     />
                   </td>
                   <td className="mdl-data-table__cell--non-numeric" style={{ width: '100%', whiteSpace: 'normal'}}>{item.todo_text}</td>
                   <td>
                     <div style={{position: 'relative'}}>
-                      <IconButton name="more_vert" id={item.id} />
-                      <Menu target={item.id} align="right">
+                      <IconButton name="more_vert" id={item.todo_id} />
+                      <Menu target={item.todo_id} align="right">
                         <MenuItem
                           onClick={() => this.setState({
                             showEditModal: true,
@@ -51,7 +51,7 @@ class ToDoItems extends Component {
                             editedText: item.todo_text
                           })}>Edit
                         </MenuItem>
-                        <MenuItem onClick={() => this.props.deleteTodo(item.id, item.category)}>Delete</MenuItem>
+                        <MenuItem onClick={() => this.props.deleteTodo(item.todo_id, item.category)}>Delete</MenuItem>
                       </Menu>
                     </div>
                   </td>
@@ -77,7 +77,7 @@ class ToDoItems extends Component {
                     type='button'
                     onClick={() => {
                       const itemBeingEdited = this.state.itemBeingEdited
-                      this.submitEditedItem(itemBeingEdited.id, Object.assign({}, itemBeingEdited, {todo_text: this.state.editedText}))
+                      this.submitEditedItem(itemBeingEdited.todo_id, Object.assign({}, itemBeingEdited, {todo_text: this.state.editedText}))
                       this.setState({ showEditModal: false })
                     }}>Done
                   </Button>

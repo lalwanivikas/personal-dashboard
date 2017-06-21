@@ -15,7 +15,6 @@ export class CategoryList extends Component {
 
   handleKeyPress(e) {
     if (e.key === 'Enter') {
-      console.log('do validate');
       this.props.createTodo({
         "category": this.props.category,
         "todo_text": this.state.newTodo,

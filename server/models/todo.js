@@ -1,13 +1,11 @@
-const pgp = require('pg-promise')()
 const shortid = require('shortid')
-
-const connectionString = `${process.env.DB_ENDPOINT}/todos`
-const db = pgp(connectionString)
+const db = require('./../start').db
 
 /*
 table columns: id, category, todo_text, todo_status, created_at, updated_at
 POST AND PUT request format:
 {
+  "user_id": 'KJHGFSA',
   "category": "goal",
   "todo_text": "fly to mars",
   "todo_status": "FALSE",
@@ -18,7 +16,8 @@ POST AND PUT request format:
 */
 
 const getAllData = (req, res, next) => {
-  db.any('select * from items')
+  const userId = req.body.user_id
+  db.any('select * from items where user_id=$1', userId)
     .then(data => {
       res.status(200)
         .json({
@@ -32,7 +31,8 @@ const getAllData = (req, res, next) => {
 
 const getItemsList = (req, res, next) => {
   const category = req.params.category
-  db.any('select * from items where category=$1', category)
+  const userId = req.body.user_id
+  db.any('select * from items where category=$1 AND user_id=$2', [category, userId])
     .then(data => {
       res.status(200)
         .json({
@@ -45,9 +45,9 @@ const getItemsList = (req, res, next) => {
 }
 
 const createItem = (req, res, next) => {
-  req.body.id = shortid.generate()
-  db.none('insert into items(id, category, todo_text, todo_status, created_at, updated_at, target_date)' +
-      'values(${id}, ${category}, ${todo_text}, ${todo_status}, ${created_at}, ${updated_at}, to_timestamp(${target_date}))', req.body)
+  req.body.todo_id = shortid.generate()
+  db.none('insert into items(todo_id, user_id, category, todo_text, todo_status, created_at, updated_at, target_date)' +
+      'values(${todo_id}, ${user_id}, ${category}, ${todo_text}, ${todo_status}, ${created_at}, ${updated_at}, to_timestamp(${target_date}))', req.body)
     .then(() => {
       res.status(200)
         .json({
@@ -59,10 +59,10 @@ const createItem = (req, res, next) => {
 }
 
 const updateItem = (req, res, next) => {
-  const id = req.params.id
+  const todo_id = req.params.id
   const { category, todo_text, todo_status, target_date } = req.body
-  db.none('update items set category=$1, todo_text=$2, todo_status=$3, updated_at=now(), target_date=to_timestamp($4) where id=$5',
-    [category, todo_text, todo_status, target_date, id])
+  db.none('update items set category=$1, todo_text=$2, todo_status=$3, updated_at=now(), target_date=to_timestamp($4) where todo_id=$5',
+    [category, todo_text, todo_status, target_date, todo_id])
     .then(() => {
       res.status(200)
         .json({
@@ -74,8 +74,8 @@ const updateItem = (req, res, next) => {
 }
 
 const removeItem = (req, res, next) => {
-  const id = req.params.id
-  db.result('delete from items where id = $1', id)
+  const todo_id = req.params.id
+  db.result('delete from items where todo_id = $1', todo_id)
     .then(result => {
       res.status(200)
         .json({

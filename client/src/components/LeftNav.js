@@ -3,30 +3,41 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { Layout, Header, Navigation, Drawer, Content } from 'react-mdl'
 
-const LeftNav = ({ children, title }) => (
-  <Layout fixedHeader>
+import Auth from './../Auth'
 
-    <Header title={title}>
-      <Navigation>
-        <Link to='/goals'>Add goals</Link>
-        <Link to='/'>Sign out</Link>
-      </Navigation>
-    </Header>
+const LeftNav = ({ children, title }) => {
+  document.title = title
+  return (
+    <Layout fixedHeader>
 
-    <Drawer title="Vikas Lalwani">
-      <Navigation>
-        <Link to='/'>Dashboard</Link>
-        <Link to='/list/work'>Work</Link>
-        <Link to='/list/misc'>Misc</Link>
-      </Navigation>
-    </Drawer>
+      <Header title={title}>
+        <Navigation>
+          <Link to='/goals'>Add goals</Link>
+          <a
+            onClick={() => {
+              Auth.deauthenticateUser()
+              window.location = '/login'
+            }}
+            style={{cursor: 'pointer'}}
+          >Sign out</a>
+        </Navigation>
+      </Header>
 
-    <Content>
-      {children}
-    </Content>
+      <Drawer title={Auth.getName() !== null ? Auth.getName() : 'Anon Champ'}>
+        <Navigation>
+          <Link to='/'>Dashboard</Link>
+          <Link to='/list/work'>Work</Link>
+          <Link to='/list/misc'>Misc</Link>
+        </Navigation>
+      </Drawer>
 
-  </Layout>
-)
+      <Content>
+        {children}
+      </Content>
+
+    </Layout>
+  )
+}
 
 LeftNav.propTypes = {
   children: PropTypes.node.isRequired,

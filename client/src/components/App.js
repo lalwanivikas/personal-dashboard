@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 
-import Login from '../components/Login'
+import Account from '../components/Account'
 import LeftNav from '../components/LeftNav'
 import Dashboard from '../containers/Dashboard'
 import CategoryList from '../containers/CategoryList'
 import Goals from '../containers/Goals'
 
+import Auth from './../Auth'
 import { capitalizeFirstCharacter } from './../helpers'
 
 export class App extends Component {
@@ -16,27 +17,39 @@ export class App extends Component {
         <div>
 
           <Route exact path='/' component={() => (
-              <LeftNav title='Dashboard'>
-                <Dashboard />
-              </LeftNav>
+            Auth.isUserAuthenticated()
+              ? <LeftNav title='Dashboard'>
+                  <Dashboard />
+                </LeftNav>
+              : <Redirect to='/login' />
             )}
           />
 
           <Route path='/goals' component={() => (
-              <LeftNav title='Add or update goals'>
-                <Goals />
-              </LeftNav>
+            Auth.isUserAuthenticated()
+              ? <LeftNav title='Add or update goals'>
+                  <Goals />
+                </LeftNav>
+              : <Redirect to='/login' />
             )}
           />
 
           <Route path='/list/:category' component={({ match }) => (
-              <LeftNav title={capitalizeFirstCharacter(match.params.category)}>
-                <CategoryList category={match.params.category} />
-              </LeftNav>
+            Auth.isUserAuthenticated()
+              ? <LeftNav title={capitalizeFirstCharacter(match.params.category)}>
+                  <CategoryList category={match.params.category} />
+                </LeftNav>
+              : <Redirect to='/login' />
             )}
           />
 
-          <Route exact path='/login' component={Login} />
+          <Route exact path='/login' component={() => (
+            Auth.isUserAuthenticated()
+              ? <LeftNav title='Dashboard'>
+                  <Dashboard />
+                </LeftNav>
+              : <Account title='Login or signup'/>
+          )} />
 
         </div>
       </Router>

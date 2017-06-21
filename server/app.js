@@ -5,17 +5,25 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const passport = require('passport');
 
-// route handlers
-const apiRoutes = require('./routes/api')
-const authRoutes = require('./routes/auth')
-
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(passport.initialize());
 
-app.use('/api', apiRoutes) // api routes
+
+// load passport strategies
+const localLoginStrategy = require('./passport/local-login');
+passport.use('local-login', localLoginStrategy);
+
+// pass the authenticaion checker middleware
+const authCheckMiddleware = require('./middleware/auth-check');
+app.use('/api', authCheckMiddleware);
+
+// route handlers
+const authRoutes = require('./routes/auth')
+const apiRoutes = require('./routes/api')
 app.use('/auth', authRoutes) // authentication route
+app.use('/api', apiRoutes) // api routes
 
 
 // production error handler

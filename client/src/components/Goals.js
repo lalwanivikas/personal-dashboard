@@ -61,11 +61,11 @@ export class Goals extends Component {
             {
               this.state.items.map(item => (
                 <GoalForm
-                  key={item.id}
+                  key={item.todo_id}
                   type='existing'
                   label=''
                   goalText={item.todo_text}
-                  id={item.id}
+                  id={item.todo_id}
                   currentTargetDay={new Date(item.target_date)}
                   onFormSubmit={(goalText, targetDate, id) => this.editExistingGoal(goalText, targetDate, id)}
                   deleteGoal={id => this.deleteGoal(id)}

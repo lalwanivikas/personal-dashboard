@@ -1,5 +1,7 @@
 import fetch from 'isomorphic-fetch'
+import Auth from './../Auth'
 
+// constants
 export const REQUEST_TODOS = 'REQUEST_TODOS'
 export const RECEIVE_TODOS = 'RECEIVE_TODOS'
 export const SET_VIEW = 'SET_VIEW'
@@ -32,8 +34,11 @@ function receiveTodos(view, json) {
 export function fetchTodos(view) {
   return dispatch => {
     dispatch(requestTodos(view))
-    return fetch(`API_ENDPOINT/api/items/${view}`)
-      .then(response => response.json())
+    return fetch(`API_ENDPOINT/api/items/${view}`, {
+      headers: new Headers({
+        'Authorization': `bearer ${Auth.getToken()}`
+      })
+    }).then(response => response.json())
       .then(json => dispatch(receiveTodos(view, json)))
   }
 }
@@ -42,9 +47,10 @@ export function createTodo(todo) {
   return dispatch => {
     return fetch(`API_ENDPOINT/api/items/`, {
       method: 'POST',
-      headers: {
+      headers: new Headers({
+        'Authorization': `bearer ${Auth.getToken()}`,
         'Content-Type': 'application/json'
-      },
+      }),
       body: JSON.stringify(todo)
     })
     .then(() => dispatch(fetchTodos(todo.category)))
@@ -55,9 +61,10 @@ export function editTodo(id, todo) {
   return dispatch => {
     return fetch(`API_ENDPOINT/api/items/${id}`, {
       method: 'PUT',
-      headers: {
+      headers: new Headers({
+        'Authorization': `bearer ${Auth.getToken()}`,
         'Content-Type': 'application/json'
-      },
+      }),
       body: JSON.stringify(todo)
     })
     .then(() => dispatch(fetchTodos(todo.category)))
@@ -68,9 +75,10 @@ export function deleteTodo(id, category) {
   return dispatch => {
     return fetch(`API_ENDPOINT/api/items/${id}`, {
       method: 'DELETE',
-      headers: {
+      headers: new Headers({
+        'Authorization': `bearer ${Auth.getToken()}`,
         'Content-Type': 'application/json'
-      }
+      })
     })
     .then(() => dispatch(fetchTodos(category)))
   }

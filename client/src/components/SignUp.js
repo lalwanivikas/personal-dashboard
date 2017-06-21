@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import fetch from 'isomorphic-fetch'
+// import { Link } from 'react-router-dom'
 import { Textfield, Button } from 'react-mdl'
-// import PropTypes from 'prop-types'
 
-import Auth from './../Auth'
-
-class Login extends Component {
+class SignUp extends Component {
 
   constructor(props) {
     super(props)
@@ -13,6 +11,7 @@ class Login extends Component {
     this.state = {
       errors: {},
       user: {
+        name: '',
         email: '',
         password: ''
       },
@@ -33,7 +32,9 @@ class Login extends Component {
 
   processForm(event) {
     event.preventDefault()
-    fetch(`API_ENDPOINT/auth/login`, {
+    // const { name, email, password } = this.state.user
+    // const formData = encodeURIComponent(`name=${name}&email=${email}&password=${password}`)
+    fetch(`API_ENDPOINT/auth/signup`, {
       method: 'post',
       mode: 'cors',
       headers: {
@@ -43,8 +44,7 @@ class Login extends Component {
       body: JSON.stringify(this.state.user)
     })
     .then(res => {
-      // console.log(res);
-      if (res.ok) { return res.json() }
+      if (res.ok) return res.json()
       return res.json()
         .then(data => {
           this.setState({ errors: data.errors })
@@ -52,28 +52,25 @@ class Login extends Component {
         })
       }
     )
-    .then((data) => {
-      // console.log(data)
-      this.setState({ success: true })
-      // save the token
-      Auth.authenticateUser(data.token);
-
-      // save name in local storage
-      Auth.setName(data.user.name)
-
-      // change the current URL to /
-      window.location = '/';
-    })
-    .catch(() => this.setState({ errors: {message: 'unable to log in at this moment'} }))
+    .then(() => this.setState({ success: true }))
+    .catch(() => this.setState({ errors: {message: 'unable to sign up at this moment'} }))
   }
 
   render() {
-    const { user, errors, success } = this.state
+    const { user, errors } = this.state
     return (
       <div className='login-form'>
         <div>
-          <h4>Login</h4>
+          <h4>Create Account</h4>
           <form onSubmit={this.processForm}>
+            <Textfield
+              type='text'
+              name='name'
+              label='Name' floatingLabel
+              value={user.name}
+              onChange={this.updateInputField}
+            />
+            {errors.name && <div>{errors.name}</div>}
 
             <Textfield
               type='email'
@@ -93,9 +90,13 @@ class Login extends Component {
             />
             {errors.password && <div>{errors.password}</div>}
 
-            <Button raised colored>Login</Button>
+            <Button raised colored disabled={errors.message ? true : false}>Create Account</Button>
 
-            {(errors.message && !success) && <div>{errors.message}</div>}
+            {errors.message && <div>{errors.message}</div>}
+            {
+              this.state.success &&
+              <div>Account successfully created. Login using above form.</div>
+            }
 
           </form>
         </div>
@@ -104,8 +105,4 @@ class Login extends Component {
   }
 }
 
-// Login.contextTypes = {
-//   router: PropTypes.object.isRequired
-// };
-
-export default Login
+export default SignUp
