@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack-dashboard webpack-dev-server"
+    "dev": "webpack-dashboard webpack-dev-server",
+    "prod": "webpack -p"
   },
   "keywords": [],
   "author": "",
