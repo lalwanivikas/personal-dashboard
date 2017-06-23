@@ -6,9 +6,9 @@ const API_ENDPOINT = 'http://localhost:3000' // API for Postgres db
 const config = {
   entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'public'),
     filename: 'bundle.js',
-    publicPath: '/dist/',
+    publicPath: '/public/',
   },
   module: {
     rules: [{
@@ -32,7 +32,7 @@ const config = {
     }]
   },
   devServer: {
-    publicPath: "/dist/",
+    publicPath: "/public/",
     contentBase: "public",
     historyApiFallback: true
   },
