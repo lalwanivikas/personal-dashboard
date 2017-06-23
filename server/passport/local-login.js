@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const LocalStrategy = require('passport-local').Strategy
 const db = require('./../start').db
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 /**
  * Return the Passport Local Strategy object.
