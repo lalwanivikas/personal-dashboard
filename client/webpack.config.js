@@ -1,7 +1,7 @@
 const path = require('path')
 const DashboardPlugin = require('webpack-dashboard/plugin')
 
-const API_ENDPOINT = 'http://localhost:3000/server' // API for Postgres db
+const API_ENDPOINT = '/server' // API for Postgres db
 
 const config = {
   entry: './src/index.js',
